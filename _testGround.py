@@ -5,7 +5,7 @@ import threading as th
 
 
 def ping(host):
-    with open(host + '.cmd', 'w') as file_ob:
+    with open('C:\\Users\\102710.SNGROUP01\\Desktop\\cmd\\' + host + '.cmd', 'w') as file_ob:
         # print(file_ob.readline())
         file_ob.write('ping ' + host + '\n')
     os.system('ping_cmd.cmd')
