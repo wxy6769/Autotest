@@ -14,7 +14,7 @@ def getVersion(model, host, user, pswd):
     except socket.timeout:
         print(host, 'timed out.')
         # 這個替代方案需要被謹慎完善
-        os.system('ping_cmd.cmd')
+        os.system('\\cmd' + host + '.cmd')
         tn.open(host)
         print('Connecting to', host, 'again...')
 
