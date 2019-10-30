@@ -5,23 +5,22 @@ import threading as th
 
 
 def ping(host):
-    with open('C:\\Users\\102710.SNGROUP01\\Desktop\\cmd\\' + host + '.cmd', 'w') as file_ob:
-        # print(file_ob.readline())
+    with open('cmd\\' + host + '.cmd', 'w') as file_ob:
         file_ob.write('ping ' + host + '\n')
-    os.system('ping_cmd.cmd')
+    os.system('cmd\\' + host + '.cmd')
 
 
-# Dim list of threads.
-threads = []
-host = ['127.0.0.1', '8.8.8.8', '172.20.1.169']
+if __name__ == '__main__':
 
-# Dim multi-threads according to list of threads.
-for i in range(len(host)):
-    threads.append(th.Thread(target=ping, args=(host[i],)))
-    threads[i].start()
-    # print(threads[i])
-    # print(host[i])
+    # Dim list of threads.
+    threads = []
+    host = ['127.0.0.1', '8.8.8.8', '172.20.1.169']
 
-# Main will wait for subs finished.
-for i in range(len(threads)):
-    threads[i].join()
+    # Dim multi-threads according to list of threads.
+    for i in range(len(host)):
+        threads.append(th.Thread(target=ping, args=(host[i],)))
+        threads[i].start()
+
+    # Main will wait for subs finished.
+    for i in range(len(threads)):
+        threads[i].join()
