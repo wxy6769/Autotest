@@ -8,11 +8,15 @@ def getSets():
 
     for i in range(len(lines)):
         elem = lines[i].split(', ')
-        if len(elem) == 5:
-            settings = {'model': '', 'host': '', 'user': '', 'pswd': '', 'cmd': ''}
-            all_sets.append(settings)
-            for j in range(len(elem)):
-                all_sets[i][keys[j]] = elem[j]
+
+        try:
+            if len(elem) != 1:
+                settings = {'model': '', 'host': '', 'user': '', 'pswd': '', 'cmd': ''}
+                all_sets.append(settings)
+                for j in range(len(elem)):
+                    all_sets[i][keys[j]] = elem[j]
+        except IndexError:
+            continue
 
     return(all_sets)
 
