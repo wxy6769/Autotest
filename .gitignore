@@ -1,0 +1,4 @@
+# 檔案名稱 .gitignore
+
+#忽略 cmd 目錄下的所有 .cmd 檔案
+/cmd/*.cmd
