@@ -4,4 +4,4 @@
 /cmd/*.cmd
 
 #忽略所有 __pycache__目錄下的所有 Python Cache 檔
-__pycache__/
+/__pycache__/*.pyc
