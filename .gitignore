@@ -2,3 +2,6 @@
 
 #忽略 cmd 目錄下的所有 .cmd 檔案
 /cmd/*.cmd
+
+#忽略所有 __pycache__目錄下的所有 Python Cache 檔
+__pycache__/
