@@ -2,6 +2,14 @@ import telnetlib
 import time as t
 import os
 import socket
+import logging
+
+
+# Dim log format
+logging.basicConfig(
+    filename='logs\\sample.log',
+    format='%(asctime)s [line:%(lineno)d] - %(levelname)s: %(message)s',
+    level=logging.DEBUG)
 
 
 def getVersion(model, host, user, pswd):
@@ -9,9 +17,9 @@ def getVersion(model, host, user, pswd):
 
     try:
         tn.open(host, timeout=10)
-        print('Connecting to', host)
+        logging.info('Connecting to ' + host)
     except socket.timeout:
-        print(host, 'timed out.')
+        logging.error(host + 'Timeout')
         # 這個替代方案需要被謹慎完善
         os.system('\\cmd' + host + '.cmd')
         tn.open(host)
@@ -22,9 +30,11 @@ def getVersion(model, host, user, pswd):
     tn.read_until(b'Password: ')
     tn.write(pswd.encode('ascii') + b'\n')
     tn.read_until(b'#')
-    tn.write(b'sh version\n')
+    state = 'Login finished.'
 
-    print(model, host, 'Login finish.')
+    tn.write(b'sh version\n')
+    print(host + ':', model, 'Login finish.')
+    logging.info(host + ' : ' + model + ' Login finish.')
 
     # 配合網路延遲稍作等待
     t.sleep(1)
@@ -48,7 +58,6 @@ def cmdUpgrade(model, host, user, pswd, cmd):
 
     try:
         tn.open(host, timeout=10)
-        print('Connecting to', host)
     except socket.timeout:
         print(host, 'timed out.')
         # 這個替代方案需要被謹慎完善
@@ -72,10 +81,11 @@ def cmdUpgrade(model, host, user, pswd, cmd):
     tn.write(b'y')
     tn.read_until(b'y')
     tn.write(b'\r\n')
-    print(model, ':', host, 'Upgrading firmware now...')
+    print(host, ':', model, 'Upgrading firmware now...')
 
     # Upgrade firmware success. Do you want to reboot now?
-    tn.read_until(b'Upgrade firmware success. Do you want to reboot now? (y/n)')
+    tn.read_until(
+        b'Upgrade firmware success. Do you want to reboot now? (y/n)')
     tn.write(b'y')
     tn.read_until(b'y')
     tn.write(b'\r\n')
@@ -88,7 +98,6 @@ def cmdReset(model, host, user, pswd):
 
     try:
         tn.open(host, timeout=30)
-        print('Connecting to', host)
     except socket.timeout:
         print(host, 'timed out.')
         # 這個替代方案需要被謹慎完善
@@ -105,7 +114,8 @@ def cmdReset(model, host, user, pswd):
     print(host, 'Login finish.')
 
     tn.write(b'restore-defaults\n')
-    tn.read_until(b'After restore to default, system will be rebooted. Do you want to continue? (y/n)')
+    tn.read_until(
+        b'After restore to default, system will be rebooted. Do you want to continue? (y/n)')
     tn.write(b'y')
     tn.read_until(b'y')
     tn.write(b'\r\n')
@@ -116,8 +126,9 @@ def cmdReset(model, host, user, pswd):
 
 # Test segment is at the bottom.
 if __name__ == '__main__':
-    host = "172.20.1.172"
+    host = "172.20.1.168"
     user = "araknis"
     pswd = "aaaaaaaa"
-    ver = getVersion(host, user, pswd)
-    print(ver)
+    model = "310-R-8-POE"
+    ver = getVersion(model, host, user, pswd)
+    print(host + ':', model, ver)
