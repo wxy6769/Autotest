@@ -6,5 +6,8 @@
 # 忽略所有 __pycache__目錄下的所有 Python Cache 檔
 /__pycache__/*.pyc
 
-# 忽略因應測試所產生的所有log檔
+# 忽略因應測試所產生的所有 log 檔
 /logs/*.log
+
+# 忽略放置在 img 目錄底下的所有檔案
+/img/*
