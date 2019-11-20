@@ -1,4 +1,0 @@
-210-F-8-POE, 172.20.1.169, araknis, aaaaaaaa, copy tftp://172.20.1.167/an-210-sw-8-poe_fw_1.2.09_190805-1652.bix flash://image0
-210-F-16-POE, 172.20.1.170, araknis, aaaaaaaa, copy tftp://172.20.1.167/an-210-sw-16-poe_fw_1.2.09_190805-1642.bix flash://image0
-310-R-8-POE, 172.20.1.172, araknis, aaaaaaaa, copy tftp://172.20.1.167/an-310-sw-8-poe_fw_1.2.09_190805-1533.bix flash://image0
-310-F-8-POE, 172.20.1.168, araknis, aaaaaaaa, copy tftp://172.20.1.167/an-310-sw-8-poe_fw_1.2.09_190805-1533.bix flash://image0
