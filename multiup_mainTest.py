@@ -2,7 +2,12 @@ import threading as th
 import settings as sets
 import snapavcmd as sn
 import time as t
+import logging
 
+logging.basicConfig(
+    # filename='logs\\sample.log',
+    format='%(asctime)s [line:%(lineno)d] - %(levelname)s: %(message)s',
+    level=logging.DEBUG)
 
 # Get configures
 a = sets.getSets()
@@ -14,15 +19,15 @@ keys = ['model', 'host', 'user', 'pswd', 'cmd']
 # Content of one thread.
 def upfwtest(model, host, user, pswd, cmd):
     ver = sn.getVersion(model, host, user, pswd)
-    print(model + ':', host, ver)
-    # sn.cmdUpgrade(model, host, user, pswd, cmd)
-    # t.sleep(80)
-    # try:
-    #     ver = sn.getVersion(model, host, user, pswd)
-    # except Exception:
-    #     t.sleep(20)
-    #     ver = sn.getVersion(model, host, user, pswd)
-    # print(host + ':', model, ver)
+    logging.info(host + ': ' + model + ' ' + ver)
+    sn.cmdUpgrade(model, host, user, pswd, cmd)
+    t.sleep(90)
+    try:
+        ver = sn.getVersion(model, host, user, pswd)
+    except Exception:
+        t.sleep(20)
+        ver = sn.getVersion(model, host, user, pswd)
+    logging.info(host + ': ' + model + ' ' + ver)
 
 
 # Dim list os threads.

@@ -4,10 +4,8 @@ import os
 import socket
 import logging
 
-
-# Dim log format
 logging.basicConfig(
-    filename='logs\\sample.log',
+    # filename='logs\\sample.log',
     format='%(asctime)s [line:%(lineno)d] - %(levelname)s: %(message)s',
     level=logging.DEBUG)
 
@@ -17,24 +15,22 @@ def getVersion(model, host, user, pswd):
 
     try:
         tn.open(host, timeout=10)
-        logging.info('Connecting to ' + host)
+        logging.info(host + ': ' + model + ' Connected')
     except socket.timeout:
-        logging.error(host + 'Timeout')
+        logging.error(host + ': ' + model + ' Timeout')
         # 這個替代方案需要被謹慎完善
         os.system('\\cmd' + host + '.cmd')
         tn.open(host)
-        print('Connecting to', host, 'again...')
+        logging.info(host + ':' + model + 'Connecting again...')
 
     tn.read_until(b'Username: ')
     tn.write(user.encode('ascii') + b'\n')
     tn.read_until(b'Password: ')
     tn.write(pswd.encode('ascii') + b'\n')
     tn.read_until(b'#')
-    state = 'Login finished.'
 
     tn.write(b'sh version\n')
-    print(host + ':', model, 'Login finish.')
-    logging.info(host + ' : ' + model + ' Login finish.')
+    logging.info(host + ': ' + model + ' Log in finish.')
 
     # 配合網路延遲稍作等待
     t.sleep(1)
@@ -58,12 +54,13 @@ def cmdUpgrade(model, host, user, pswd, cmd):
 
     try:
         tn.open(host, timeout=10)
+        logging.info(host + ': ' + model + ' Connected')
     except socket.timeout:
-        print(host, 'timed out.')
+        logging.error(host + ': ' + model + ' Timeout')
         # 這個替代方案需要被謹慎完善
-        os.system('ping_cmd.cmd')
+        os.system('\\cmd' + host + '.cmd')
         tn.open(host)
-        print('Connecting to', host, 'again...')
+        logging.info(host + ':' + model + 'Connecting again...')
 
     tn.read_until(b'Username: ')
     tn.write(user.encode('ascii') + b'\n')
@@ -71,17 +68,17 @@ def cmdUpgrade(model, host, user, pswd, cmd):
     tn.write(pswd.encode('ascii') + b'\n')
     tn.read_until(b'#')
 
-    print(host, 'Login finish.')
+    logging.info(host + ': ' + model + ' Log in finish.')
 
     tn.write(cmd.encode('ascii') + b'\n')
-    print(host, 'Downloading the file...')
+    logging.info(host + ': ' + model + ' Downloading the file...')
 
     # Are you sure you want to proceed?
     tn.read_until(b'Are you sure you want to proceed ?(y/n)')
     tn.write(b'y')
     tn.read_until(b'y')
     tn.write(b'\r\n')
-    print(host, ':', model, 'Upgrading firmware now...')
+    logging.info(host + ': ' + model + ' Upgrading firmware now...')
 
     # Upgrade firmware success. Do you want to reboot now?
     tn.read_until(
@@ -89,7 +86,7 @@ def cmdUpgrade(model, host, user, pswd, cmd):
     tn.write(b'y')
     tn.read_until(b'y')
     tn.write(b'\r\n')
-    print(host, 'Now reboot...')
+    logging.info(host + ': ' + model + ' Now reboot...')
     tn.close()
 
 
@@ -97,13 +94,14 @@ def cmdReset(model, host, user, pswd):
     tn = telnetlib.Telnet()
 
     try:
-        tn.open(host, timeout=30)
+        tn.open(host, timeout=10)
+        logging.info(host + ': ' + model + ' Connected')
     except socket.timeout:
-        print(host, 'timed out.')
+        logging.error(host + ': ' + model + ' Timeout')
         # 這個替代方案需要被謹慎完善
-        os.system('ping_cmd.cmd')
+        os.system('\\cmd' + host + '.cmd')
         tn.open(host)
-        print('Connecting to', host, 'again...')
+        logging.info(host + ':' + model + 'Connecting again...')
 
     tn.read_until(b'Username: ')
     tn.write(user.encode('ascii') + b'\n')
@@ -111,7 +109,7 @@ def cmdReset(model, host, user, pswd):
     tn.write(pswd.encode('ascii') + b'\n')
     tn.read_until(b'#')
 
-    print(host, 'Login finish.')
+    logging.info(host + ': ' + model + ' Log in finish.')
 
     tn.write(b'restore-defaults\n')
     tn.read_until(
@@ -121,11 +119,14 @@ def cmdReset(model, host, user, pswd):
     tn.write(b'\r\n')
 
     tn.close()
-    print('Finish restore to defaults.')
+    logging.info(host + ': ' + model + ' Finish restore to defaults.')
 
 
 # Test segment is at the bottom.
 if __name__ == '__main__':
+
+    # Dim log format
+
     host = "172.20.1.168"
     user = "araknis"
     pswd = "aaaaaaaa"
