@@ -4,7 +4,7 @@
 /cmd/*.cmd
 
 # 忽略所有 __pycache__目錄下的所有 Python Cache 檔
-/__pycache__/*.pyc
+/__pycache__/
 
 # 忽略因應測試所產生的所有 log 檔
 /logs/*.log
