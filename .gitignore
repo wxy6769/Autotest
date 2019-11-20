@@ -12,5 +12,5 @@
 # 忽略放置在 img 目錄底下的所有檔案
 /img/*
 
-# 忽略測試用 .txt 檔
-switchset_list.txt
+# 忽略所有測試用 .txt 檔
+*.txt
