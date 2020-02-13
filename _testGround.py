@@ -1,44 +1,65 @@
-def getLease():
-    with open('dhcpd.leases.txt', 'r') as file_ob:
-        lease = file_ob.read().split('lease ')
+from tkinter import *
+from tkinter import StringVar
+import time
 
-    # 刪掉文件前段註解
-    del(lease[:2])
 
-    # 此變數用於存取每組lease紀錄
-    innerlines = []
-    # 此變數用於存放所有lease紀錄
-    all_sets = []
+class Progress:
 
-    # 外圈-走訪文件，分行split存至list
-    for i in range(len(lease)):
-        innerlines = lease[i].split(';\n  ')
+    def __init__(self):
 
-        # 走訪list
-        for j in range(len(innerlines)):
-            try:
-                # 尋找lease紀錄中包含'client-hostname'的元素
-                if 'client-hostname' in innerlines[j]:
+        model = "AN-310-SW-R-8"
 
-                    # 先針對IP字串進行處理
-                    place_ne = innerlines[0].find(' {')
-                    innerlines[0] = innerlines[0][:place_ne]
+        self.root = Tk()
+        self.root.geometry('245x30')
+        self.root.title(model)
 
-                    # 再針對Model Name進行處理
-                    for x in innerlines:
-                        place_ne = innerlines[j].find(';')
-                        innerlines[j] = innerlines[j][:place_ne]
-                        break
+        self.var = StringVar()
+        self.var.set("GO")
+        self.button = Button(
+            self.root,
+            textvariable=self.var,
+            command=self.start,
+            width=5)
+        self.button.grid(row=0, column=0, padx=5)
 
-                    settings = {'host': innerlines[0], 'model': innerlines[j]}
-                    all_sets.append(settings)
+        # 建立一個背景色為白色的矩形
+        self.canvas = Canvas(self.root, width=170, height=26, bg="white")
 
-            except IndexError:
-                continue
+        # 建立矩形的外框(left_margin, top_margin, width, height, frame_width, color)
+        self.out_line = self.canvas.create_rectangle(
+            2, 2, 180, 27,
+            width=1,
+            outline="red")
+        self.canvas.grid(row=0, column=1, ipadx=5)
 
-    return(all_sets)
+        self.root.mainloop()
+
+    def start(self):
+        # 設定按鈕只允許點擊一次
+        self.button.config(state="disable")
+        fill_line = self.canvas.create_rectangle(
+            2, 2, 0, 27,
+            width=0, fill="blue")
+
+        # 進度條最大值
+        x = 100
+        # 矩形填滿所需要的次數
+        n = 180 / x
+        # 顯示值
+        k = 100 / x
+
+        for i in range(x):
+            n = n + 180 / x
+            k = k + 100 / x
+            # 以矩形的長度作為更新基數
+            self.canvas.coords(fill_line, (0, 0, n, 30))
+            if k >= 100:
+                self.var.set("100%")
+            else:
+                self.var.set(str(round(k, 1)) + "%")
+            self.root.update()
+            time.sleep(0.01)
 
 
 if __name__ == '__main__':
-    a = getLease()
-    print(a)
+    Progress()
